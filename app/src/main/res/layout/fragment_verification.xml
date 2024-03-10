@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".login.VerificationFragment">
+    tools:context=".register.VerificationFragment">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -59,6 +59,14 @@
                 android:hint="Enter code"
                 android:inputType="numberDecimal"/>
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_verify_account"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:backgroundTint="@color/mainYellow"
+            android:text="Verify account"
+            android:layout_marginBottom="13dp"/>
 
 
         <LinearLayout

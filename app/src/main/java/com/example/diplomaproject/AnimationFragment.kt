@@ -8,12 +8,17 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.diplomaproject.core.repository.SharedPreferencesRepo
 import com.example.diplomaproject.databinding.FragmentAnimation1Binding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
+@AndroidEntryPoint
 class AnimationFragment: Fragment() {
 
+    @Inject lateinit var sharedPreferencesRepo: SharedPreferencesRepo
     private lateinit var binding: FragmentAnimation1Binding
     val twoSeconds: Duration = 2000.milliseconds
 
@@ -21,7 +26,7 @@ class AnimationFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAnimation1Binding.inflate(layoutInflater)
         return binding.root
     }
@@ -45,8 +50,12 @@ class AnimationFragment: Fragment() {
                 binding.circle1.scaleY = 5f
             }
         }
-        binding.layoutt.setOnClickListener{
-            findNavController().navigate(R.id.action_animationFragment_to_startFragment)
+        binding.layoutt.setOnClickListener {
+            if (sharedPreferencesRepo.getUserToken() != SharedPreferencesRepo.NO_VALUE) {
+                findNavController().navigate(R.id.action_animationFragment_to_homeActivity)
+            } else {
+                findNavController().navigate(R.id.action_animationFragment_to_startFragment)
+            }
         }
     }
 }
