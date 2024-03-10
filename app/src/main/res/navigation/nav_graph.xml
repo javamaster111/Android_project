@@ -23,36 +23,47 @@
     <fragment
         android:id="@+id/animationFragment"
         android:name="com.example.diplomaproject.AnimationFragment"
-        android:label="AnimationFragment" >
+        android:label="AnimationFragment"
+        tools:layout="@layout/fragment_animation1">
         <action
             android:id="@+id/action_animationFragment_to_startFragment"
             app:destination="@id/startFragment" />
+        <action
+            android:id="@+id/action_animationFragment_to_homeActivity"
+            app:destination="@id/homeActivity" />
     </fragment>
     <fragment
         android:id="@+id/resetFragment"
         android:name="com.example.diplomaproject.login.ResetFragment"
-        android:label="ResetFragment" >
+        android:label="ResetFragment"
+        tools:layout="@layout/fragment_reset">
         <action
             android:id="@+id/action_resetFragment_to_verificationFragment"
             app:destination="@id/verificationFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.diplomaproject.login.RegisterFragment"
+        android:name="com.example.diplomaproject.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
             android:id="@+id/action_registerFragment_to_profileInfoFragment"
             app:destination="@id/profileInfoFragment" />
+        <action
+            android:id="@+id/action_registerFragment_to_verificationFragment"
+            app:destination="@id/verificationFragment" />
     </fragment>
     <fragment
         android:id="@+id/verificationFragment"
-        android:name="com.example.diplomaproject.login.VerificationFragment"
+        android:name="com.example.diplomaproject.register.VerificationFragment"
         android:label="fragment_verification"
         tools:layout="@layout/fragment_verification" >
         <action
             android:id="@+id/action_verificationFragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
+        <action
+            android:id="@+id/action_verificationFragment_to_homeActivity"
+            app:destination="@id/homeActivity" />
     </fragment>
     <fragment
         android:id="@+id/changePasswordFragment"
@@ -66,7 +77,8 @@
     <fragment
         android:id="@+id/profileInfoFragment"
         android:name="com.example.diplomaproject.login.ProfileInfoFragment"
-        android:label="ProfileInfoFragment" >
+        android:label="ProfileInfoFragment"
+        tools:layout="@layout/fragment_profile_info">
         <action
             android:id="@+id/action_profileInfoFragment_to_homeActivity"
             app:destination="@id/homeActivity" />
@@ -75,5 +87,7 @@
         android:id="@+id/homeActivity"
         android:name="com.example.diplomaproject.HomeActivity"
         android:label="activity_home"
-        tools:layout="@layout/activity_home" />
+        tools:layout="@layout/activity_home">
+    </activity>
+
 </navigation>

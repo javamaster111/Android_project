@@ -9,8 +9,10 @@ import com.example.diplomaproject.mainpage.Home1Fragment
 import com.example.diplomaproject.mainpage.Home2Fragment
 import com.example.diplomaproject.mainpage.HomeFragment
 import com.example.diplomaproject.mainpage.ProfileFragment
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityHomeBinding

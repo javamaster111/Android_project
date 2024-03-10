@@ -1,41 +1,22 @@
-package com.example.diplomaproject.login
+package com.example.diplomaproject.register
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.diplomaproject.R
 import com.example.diplomaproject.databinding.FragmentRegisterBinding
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
+class RegisterFragment : Fragment(R.layout.fragment_register) {
 
-class RegisterFragment : Fragment() {
-    private lateinit var binding: FragmentRegisterBinding
-    private lateinit var auth: FirebaseAuth
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentRegisterBinding.inflate(layoutInflater)
-        return binding.root
-
-    }
-
+    private val viewBinding: FragmentRegisterBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.buttonCreateAccount.setOnClickListener {
-            findNavController().navigate(R.id.action_registerFragment_to_profileInfoFragment)
-        }
-
         // Initialize Firebase Auth
 //        auth = Firebase.auth
 
@@ -58,6 +39,29 @@ class RegisterFragment : Fragment() {
 //                }
 //            }
 
+        initActions()
+    }
+
+    private fun initActions() = with(viewBinding) {
+        buttonCreateAccount.setOnClickListener {
+            val username = fieldName.text.toString()
+            val password = fieldPassword.text.toString()
+            val email = fieldEmail.text.toString()
+
+            if (username.isNotEmpty() && password.isNotEmpty() && email.isNotEmpty()) {
+                val bundle = Bundle().apply {
+                    putString(REG_USER_NAME, email)
+                    putString(REG_USER_PASSWORD, password)
+                }
+                findNavController().navigate(R.id.action_registerFragment_to_verificationFragment, bundle)
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Please fill in all fields",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
 //    override fun onStart() {
