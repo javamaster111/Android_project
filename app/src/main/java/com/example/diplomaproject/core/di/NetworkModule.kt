@@ -1,7 +1,11 @@
+@file:Suppress("ktlint:standard:import-ordering")
+
 package com.example.diplomaproject.core.di
 
+import com.example.diplomaproject.core.repository.ProfileRepositoryImpl
 import com.example.diplomaproject.core.service.AuthService
 import com.example.diplomaproject.core.repository.UserRepositoryImpl
+import com.example.diplomaproject.core.service.ProfileService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,20 +14,21 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     private const val BASE_URL = "http://138.68.125.57:8080"
 
     @Singleton
     @Provides
-    fun provideHttpLoggingInterceptor() = HttpLoggingInterceptor().apply {
-        this.level = HttpLoggingInterceptor.Level.BODY
-    }
+    fun provideHttpLoggingInterceptor() =
+        HttpLoggingInterceptor().apply {
+            this.level = HttpLoggingInterceptor.Level.BODY
+        }
 
     @Singleton
     @Provides
@@ -51,4 +56,12 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideUserRepo(authService: AuthService) = UserRepositoryImpl(authService)
+
+    @Singleton
+    @Provides
+    fun provideProfileApi(retrofit: Retrofit): ProfileService = retrofit.create(ProfileService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideProfileRepo(profileService: ProfileService) = ProfileRepositoryImpl(profileService)
 }

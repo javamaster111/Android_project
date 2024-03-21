@@ -1,9 +1,9 @@
 package com.example.diplomaproject.login
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -16,36 +16,39 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class StartFragment : Fragment(R.layout.fragment_start) {
-
     @Inject lateinit var sharedPreferencesRepo: SharedPreferencesRepo
     private val viewBinding: FragmentStartBinding by viewBinding()
     private val viewModel: LoginViewModel by viewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         initActions()
         initObserver()
     }
 
-    private fun initActions() = with(viewBinding) {
-        buttonLogin.setOnClickListener{
-            val email = fieldEmail.text.toString()
-            val password = fieldPassword.text.toString()
+    private fun initActions() =
+        with(viewBinding) {
+            buttonLogin.setOnClickListener {
+                val email = fieldEmail.text.toString()
+                val password = fieldPassword.text.toString()
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(requireContext(),"Fill all the fields", Toast.LENGTH_LONG).show()
-            } else {
-                viewModel.signIn(email, password)
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(requireContext(), "Fill all the fields", Toast.LENGTH_LONG).show()
+                } else {
+                    viewModel.signIn(email, password)
+                }
+            }
+            buttonForgot.setOnClickListener {
+                findNavController().navigate(R.id.action_startFragment_to_resetFragment)
+            }
+            buttonCreateAccount.setOnClickListener {
+                findNavController().navigate(R.id.action_startFragment_to_registerFragment)
             }
         }
-        buttonForgot.setOnClickListener {
-            findNavController().navigate(R.id.action_startFragment_to_resetFragment)
-        }
-        buttonCreateAccount.setOnClickListener {
-            findNavController().navigate(R.id.action_startFragment_to_registerFragment)
-        }
-    }
 
     private fun initObserver() {
         viewModel.loginStateLiveData.observe(viewLifecycleOwner, ::handleLoginState)
@@ -59,10 +62,10 @@ class StartFragment : Fragment(R.layout.fragment_start) {
             is LoginState.Loading -> {}
             is LoginState.Success -> {
                 val result = state.tokens
-                sharedPreferencesRepo.setUserToken(result.accessToken)
+                sharedPreferencesRepo.setUserAccessToken(result.accessToken)
+                sharedPreferencesRepo.setUserRefreshToken(result.refreshToken)
                 findNavController().navigate(R.id.action_startFragment_to_homeActivity)
             }
         }
     }
-
 }

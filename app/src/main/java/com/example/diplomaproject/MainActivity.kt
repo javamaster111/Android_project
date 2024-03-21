@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:import-ordering")
+
 package com.example.diplomaproject
 
 import androidx.appcompat.app.AppCompatActivity

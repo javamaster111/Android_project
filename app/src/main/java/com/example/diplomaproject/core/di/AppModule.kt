@@ -14,7 +14,9 @@ import javax.inject.Singleton
 object AppModule {
     @Singleton
     @Provides
-    fun provideSharedPreferencesRepo(@ApplicationContext context: Context): SharedPreferencesRepo {
+    fun provideSharedPreferencesRepo(
+        @ApplicationContext context: Context,
+    ): SharedPreferencesRepo {
         return SharedPreferencesRepo(context)
     }
 }

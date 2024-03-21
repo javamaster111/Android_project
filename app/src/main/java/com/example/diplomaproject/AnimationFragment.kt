@@ -16,8 +16,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @AndroidEntryPoint
-class AnimationFragment: Fragment() {
-
+class AnimationFragment : Fragment() {
     @Inject lateinit var sharedPreferencesRepo: SharedPreferencesRepo
     private lateinit var binding: FragmentAnimation1Binding
     val twoSeconds: Duration = 2000.milliseconds
@@ -25,13 +24,16 @@ class AnimationFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentAnimation1Binding.inflate(layoutInflater)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         Run.after(1000) {
@@ -51,7 +53,7 @@ class AnimationFragment: Fragment() {
             }
         }
         binding.layoutt.setOnClickListener {
-            if (sharedPreferencesRepo.getUserToken() != SharedPreferencesRepo.NO_VALUE) {
+            if (sharedPreferencesRepo.getUserRefreshToken() != SharedPreferencesRepo.NO_VALUE) {
                 findNavController().navigate(R.id.action_animationFragment_to_homeActivity)
             } else {
                 findNavController().navigate(R.id.action_animationFragment_to_startFragment)
@@ -59,9 +61,13 @@ class AnimationFragment: Fragment() {
         }
     }
 }
+
 class Run {
     companion object {
-        fun after(delay: Long, process: () -> Unit) {
+        fun after(
+            delay: Long,
+            process: () -> Unit,
+        ) {
             Handler().postDelayed({
                 process()
             }, delay)

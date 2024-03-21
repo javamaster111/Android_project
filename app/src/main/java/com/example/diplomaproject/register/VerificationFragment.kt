@@ -1,9 +1,9 @@
 package com.example.diplomaproject.register
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -15,46 +15,49 @@ import com.example.diplomaproject.databinding.FragmentVerificationBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-const val REG_USER_NAME = "reg_user_name"
+const val REG_USER_EMAIL = "reg_user_email"
 const val REG_USER_PASSWORD = "reg_user_pass"
 
 @AndroidEntryPoint
 class VerificationFragment : Fragment(R.layout.fragment_verification) {
-
     @Inject lateinit var sharedPreferencesRepo: SharedPreferencesRepo
     private val viewBinding: FragmentVerificationBinding by viewBinding()
     private val viewModel: RegisterViewModel by viewModels()
 
-    private lateinit var username: String
+    private lateinit var email: String
     private lateinit var password: String
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
-        username = requireArguments().getString(REG_USER_NAME)!!
+        email = requireArguments().getString(REG_USER_EMAIL)!!
         password = requireArguments().getString(REG_USER_PASSWORD)!!
 
         initActions()
         initObserver()
 
         viewModel.sendEmailVerification(
-            username = username,
-            smsRequestType = "REGISTER"
+            email = email,
+            smsRequestType = "REGISTER",
         )
     }
 
-    private fun initActions() = with(viewBinding) {
-        buttonVerifyAccount.setOnClickListener {
-            val verificationCode = fieldCode.text.toString()
+    private fun initActions() =
+        with(viewBinding) {
+            buttonVerifyAccount.setOnClickListener {
+                val verificationCode = fieldCode.text.toString()
 
-            if (verificationCode.isNotEmpty()) {
-                viewModel.signUp(
-                    username = username,
-                    password = password,
-                    verificationCode = verificationCode
-                )
+                if (verificationCode.isNotEmpty()) {
+                    viewModel.signUp(
+                        email = email,
+                        password = password,
+                        verificationCode = verificationCode,
+                    )
+                }
             }
         }
-    }
 
     private fun initObserver() {
         viewModel.registrationStateLiveData.observe(viewLifecycleOwner, ::handleRegistrationState)
@@ -84,14 +87,13 @@ class VerificationFragment : Fragment(R.layout.fragment_verification) {
                     Toast.makeText(
                         requireContext(),
                         "Succesful Registration",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
 
-                    sharedPreferencesRepo.setUserEmail(username)
-                    findNavController().navigate(R.id.action_verificationFragment_to_homeActivity)
+                    sharedPreferencesRepo.setUserEmail(email)
+                    findNavController().navigate(R.id.action_verificationFragment_to_profileInfoFragment)
                 }
             }
         }
     }
-
 }

@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Diploma project"
 include(":app")
- 
