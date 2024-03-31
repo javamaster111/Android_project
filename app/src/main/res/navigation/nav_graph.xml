@@ -59,14 +59,14 @@
         android:label="fragment_verification"
         tools:layout="@layout/fragment_verification" >
         <action
-            android:id="@+id/action_verificationFragment_to_changePasswordFragment"
-            app:destination="@id/changePasswordFragment" />
-        <action
             android:id="@+id/action_verificationFragment_to_homeActivity"
             app:destination="@id/homeActivity" />
         <action
             android:id="@+id/action_verificationFragment_to_profileInfoFragment"
             app:destination="@id/profileInfoFragment" />
+        <action
+            android:id="@+id/action_verificationFragment_to_startFragment"
+            app:destination="@id/startFragment" />
     </fragment>
     <fragment
         android:id="@+id/changePasswordFragment"

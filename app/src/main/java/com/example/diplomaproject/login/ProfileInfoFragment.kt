@@ -3,7 +3,6 @@ package com.example.diplomaproject.login
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -13,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -25,6 +25,11 @@ import com.example.diplomaproject.R
 import com.example.diplomaproject.core.repository.SharedPreferencesRepo
 import com.example.diplomaproject.core.state.UpdateProfileState
 import com.example.diplomaproject.databinding.FragmentProfileInfoBinding
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -34,7 +39,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import javax.inject.Inject
 
-private const val PICK_IMAGE_REQUEST = 1
 private val MEDIA_TYPE_TEXT = "text/plain".toMediaType()
 private val MEDIA_TYPE_IMAGE = "image/*".toMediaType()
 
@@ -52,7 +56,62 @@ class ProfileInfoFragment : Fragment(R.layout.fragment_profile_info) {
     private var filePath = ""
     private lateinit var file: File
 
-    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var resultLauncher: ActivityResultLauncher<PickVisualMediaRequest>
+    private var permissionGranted = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Dexter.withContext(requireActivity())
+            .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+                    Log.i("DEBUG", "permission granted")
+                    permissionGranted = true
+                }
+                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
+                    Log.i("DEBUG", "permission denied")
+                }
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: com.karumi.dexter.listener.PermissionRequest?,
+                    p1: PermissionToken?
+                ) {
+                    p1?.continuePermissionRequest()
+                }
+            }).withErrorListener {
+                Log.i("DEBUG", "error during requesting permission")
+            }
+            .onSameThread()
+            .check()
+
+        resultLauncher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                Log.d("PhotoPicker", "Selected URI: $uri")
+                val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+
+                val cursor = activity?.contentResolver?.query(
+                    uri,
+                    filePathColumn,
+                    null,
+                    null,
+                    null
+                )
+
+                cursor?.moveToFirst()
+                val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
+                filePath = columnIndex?.let { cursor.getString(it) }.toString()
+
+                Glide.with(this)
+                    .asBitmap()
+                    .load(uri)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(viewBinding.imageView)
+
+                cursor?.close()
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
+        }
+    }
 
     override fun onViewCreated(
         view: View,
@@ -60,45 +119,8 @@ class ProfileInfoFragment : Fragment(R.layout.fragment_profile_info) {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        initResultLauncher()
         initActions()
         initObserver()
-    }
-
-    private fun initResultLauncher() {
-        resultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == PICK_IMAGE_REQUEST &&
-                    result.resultCode == Activity.RESULT_OK &&
-                    result.data != null && result.data?.data != null
-                ) {
-                    val selectedImageUri = result.data!!.data
-                    val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
-
-                    val cursor =
-                        selectedImageUri?.let {
-                            activity?.contentResolver?.query(
-                                it,
-                                filePathColumn,
-                                null,
-                                null,
-                                null,
-                            )
-                        }
-                    cursor?.moveToFirst()
-
-                    val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
-                    filePath = columnIndex?.let { cursor.getString(it) }.toString()
-
-                    Glide.with(this)
-                        .asBitmap()
-                        .load(selectedImageUri)
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(viewBinding.imageView)
-
-                    cursor?.close()
-                }
-            }
     }
 
     private fun initActions() =
@@ -234,6 +256,14 @@ class ProfileInfoFragment : Fragment(R.layout.fragment_profile_info) {
             }
         }
 
+    private fun openGallery() {
+        if (permissionGranted) {
+            resultLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        } else {
+            Toast.makeText(requireContext(), "No permission..", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun initObserver() {
         viewModel.profileStateLiveData.observe(viewLifecycleOwner, ::handleState)
     }
@@ -261,21 +291,6 @@ class ProfileInfoFragment : Fragment(R.layout.fragment_profile_info) {
                 }
             }
         }
-    }
-
-    private fun openGallery() {
-        val requestPermission =
-            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-                if (isGranted) {
-                    val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                    resultLauncher.launch(gallery)
-                    Log.i("DEBUG", "permission granted")
-                } else {
-                    Log.i("DEBUG", "permission denied")
-                }
-            }
-
-        requestPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 }
 

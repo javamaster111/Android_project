@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="mainYellow">#FAE25E</color>
+    <color name="subYellow">#F6FFD2</color>
+    <color name="textHintColor">#939393</color>
 </resources>

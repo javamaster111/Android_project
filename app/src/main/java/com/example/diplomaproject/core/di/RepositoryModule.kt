@@ -2,6 +2,8 @@ package com.example.diplomaproject.core.di
 
 import com.example.diplomaproject.core.repository.ProfileRepository
 import com.example.diplomaproject.core.repository.ProfileRepositoryImpl
+import com.example.diplomaproject.core.repository.ToDoListRepository
+import com.example.diplomaproject.core.repository.ToDoListRepositoryImpl
 import com.example.diplomaproject.core.repository.UserRepository
 import com.example.diplomaproject.core.repository.UserRepositoryImpl
 import dagger.Binds
@@ -17,4 +19,7 @@ interface RepositoryModule {
 
     @Binds
     fun provideProfileRepository(profileRepo: ProfileRepositoryImpl): ProfileRepository
+
+    @Binds
+    fun provideToDoListRepository(toDoListRepository: ToDoListRepositoryImpl): ToDoListRepository
 }

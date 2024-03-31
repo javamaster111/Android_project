@@ -9,7 +9,7 @@ import com.example.diplomaproject.databinding.ActivityHomeBinding
 import com.example.diplomaproject.mainpage.Home1Fragment
 import com.example.diplomaproject.mainpage.Home2Fragment
 import com.example.diplomaproject.mainpage.HomeFragment
-import com.example.diplomaproject.mainpage.ProfileFragment
+import com.example.diplomaproject.profile.ProfileFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

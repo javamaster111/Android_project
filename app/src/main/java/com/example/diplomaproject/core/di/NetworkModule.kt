@@ -3,9 +3,11 @@
 package com.example.diplomaproject.core.di
 
 import com.example.diplomaproject.core.repository.ProfileRepositoryImpl
-import com.example.diplomaproject.core.service.AuthService
+import com.example.diplomaproject.core.repository.ToDoListRepositoryImpl
 import com.example.diplomaproject.core.repository.UserRepositoryImpl
+import com.example.diplomaproject.core.service.AuthService
 import com.example.diplomaproject.core.service.ProfileService
+import com.example.diplomaproject.core.service.ToDoListService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +16,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -64,4 +65,12 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideProfileRepo(profileService: ProfileService) = ProfileRepositoryImpl(profileService)
+
+    @Singleton
+    @Provides
+    fun provideToDoListApi(retrofit: Retrofit): ToDoListService = retrofit.create(ToDoListService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideToDoListRepo(toDoListService: ToDoListService) = ToDoListRepositoryImpl(toDoListService)
 }

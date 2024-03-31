@@ -91,7 +91,7 @@ class VerificationFragment : Fragment(R.layout.fragment_verification) {
                     ).show()
 
                     sharedPreferencesRepo.setUserEmail(email)
-                    findNavController().navigate(R.id.action_verificationFragment_to_profileInfoFragment)
+                    findNavController().navigate(R.id.action_verificationFragment_to_startFragment)
                 }
             }
         }
