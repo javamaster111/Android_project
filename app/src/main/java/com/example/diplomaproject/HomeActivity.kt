@@ -6,9 +6,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.diplomaproject.databinding.ActivityHomeBinding
-import com.example.diplomaproject.mainpage.Home1Fragment
-import com.example.diplomaproject.mainpage.Home2Fragment
 import com.example.diplomaproject.mainpage.HomeFragment
+import com.example.diplomaproject.mainpage.RoomsFragment
 import com.example.diplomaproject.profile.ProfileFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,8 +34,7 @@ class HomeActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home_id -> replaceFragment(HomeFragment())
-                R.id.home1_id -> replaceFragment(Home1Fragment())
-                R.id.home1_id -> replaceFragment(Home2Fragment())
+                R.id.home1_id -> replaceFragment(RoomsFragment())
                 R.id.profile_id -> replaceFragment(ProfileFragment())
 
                 else -> {

@@ -34,7 +34,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="170dp"
             android:layout_marginTop="30dp">
 
             <ImageView
@@ -73,18 +73,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="february"
-            android:textSize="16sp"
-            android:textColor="@color/black"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Today"
-            android:textSize="24sp"
-            android:textColor="@color/black" />
+
         <CalendarView
             android:id="@+id/calendar_view"
             android:layout_width="match_parent"
@@ -98,16 +87,18 @@
 
             />
 
-        <ImageView
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/circle_yellow"
             android:layout_gravity="end"
-            android:layout_marginRight="20dp"
-            android:elevation="50dp"
-            android:layout_marginTop="10dp">
-
-        </ImageView>
+            android:background="@drawable/button_shape"
+            android:backgroundTint="@color/mainYellow"
+            android:elevation="10dp"
+            android:src="@drawable/vector_add"
+            app:shapeAppearance="@drawable/button_shape"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="24dp"/>
 
 
     </LinearLayout>

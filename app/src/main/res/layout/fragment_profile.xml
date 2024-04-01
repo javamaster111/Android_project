@@ -85,6 +85,7 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="12dp"
         app:tabTextColor="@color/black"
+        android:backgroundTint="@color/white"
         app:tabSelectedTextColor="@color/mainYellow"
         app:tabIndicatorColor="@color/mainYellow"
         app:tabIndicatorFullWidth="true"
